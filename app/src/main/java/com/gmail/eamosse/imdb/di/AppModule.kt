@@ -9,7 +9,7 @@ import org.koin.dsl.module
 
 val appModule = module {
     single(named("API_KEY")) {
-        "507a86e6d98ae2b2cd600e594ee02637"
+        "b57d89abe48166137e632d52a72dbf6d"
     }
 
     single(named("BASE_URL")) {

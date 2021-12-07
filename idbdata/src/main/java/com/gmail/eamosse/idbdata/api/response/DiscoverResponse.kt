@@ -4,7 +4,7 @@ import com.gmail.eamosse.idbdata.data.Discover
 import com.google.gson.annotations.SerializedName
 
 internal data class DiscoverResponse(
-    @SerializedName("discover")
+    @SerializedName("results")
     val results: List<DiscoverItem>
 ) {
     data class DiscoverItem(

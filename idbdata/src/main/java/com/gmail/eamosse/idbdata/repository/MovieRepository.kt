@@ -1,5 +1,6 @@
 package com.gmail.eamosse.idbdata.repository
 
+import android.util.Log
 import com.gmail.eamosse.idbdata.api.response.*
 import com.gmail.eamosse.idbdata.api.response.toCategory
 import com.gmail.eamosse.idbdata.api.response.toEntity
@@ -37,13 +38,22 @@ class MovieRepository : KoinComponent {
         }
     }
 
-    suspend fun getDiscover(id:Int, page:Int = 0): Result<List<Discover>> {
+    suspend fun getDiscover(id:Int, page:Int = 1): Result<List<Discover>> {
         return when(val result = online.getDiscover(id, page)) {
             is Result.Succes -> {
                 val discover = result.data.map {
                     it.toDiscover()
                 }
                 Result.Succes(discover)
+            }
+            is Result.Error -> result
+        }
+    }
+
+    suspend fun getMovieById(id:Int): Result<Movie> {
+        return when(val result = online.getMovieById(id)) {
+            is Result.Succes -> {
+                Result.Succes(result.data.toMovie())
             }
             is Result.Error -> result
         }

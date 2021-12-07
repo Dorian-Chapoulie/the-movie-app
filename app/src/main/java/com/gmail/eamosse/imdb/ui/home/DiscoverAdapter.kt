@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gmail.eamosse.idbdata.data.Discover
 import com.gmail.eamosse.imdb.databinding.DiscoverItemListBinding
+import com.gmail.eamosse.imdb.glide.BidingAdapters
 
 
 class DiscoverAdapter(private val items: List<Discover>, val handler: (discover:Discover) -> Unit) :
@@ -14,6 +15,7 @@ class DiscoverAdapter(private val items: List<Discover>, val handler: (discover:
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Discover) {
             binding.item = item
+            BidingAdapters.changeImage(binding.categoryImg, item.poster_path);
 
             binding.root.setOnClickListener {
                 handler(item)

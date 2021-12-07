@@ -1,6 +1,9 @@
 package com.gmail.eamosse.imdb.ui.home
 
 import android.os.Bundle
+import android.preference.PreferenceManager
+import android.util.Log
+import android.util.Log.println
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +14,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.gmail.eamosse.imdb.databinding.FragmentHomeSecondBinding
 import kotlinx.android.synthetic.main.fragment_home_second.*
+import kotlinx.android.synthetic.main.list_item.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 class HomeSecondFragment : Fragment() {
     val args: HomeSecondFragmentArgs by navArgs()
@@ -23,6 +32,7 @@ class HomeSecondFragment : Fragment() {
     }
 
     var page: Int = 1
+    var scrolled = 0;
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,57 +45,47 @@ class HomeSecondFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         with(homeViewModel) {
             token.observe(
                 viewLifecycleOwner,
                 Observer {
-                    // On charge les films
-                    getDiscover(id = args.myArg.toInt())
+                    getDiscover(id = args.myArg.toInt(), page)
 
-                    // On ajoute un listener qui détecte le fin fond de la liste et qui va charger les films suivants. On le fait à ce moment la pour pas qu'il se crée avant d'avoir des films
-                    discover_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    discoverList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                         override fun onScrollStateChanged(
                             recyclerView: RecyclerView,
                             newState: Int
                         ) {
-                            super.onScrollStateChanged(recyclerView, newState)
+                            super.onScrollStateChanged(recyclerView, newState);
+                            if (!recyclerView.canScrollVertically(1)) {
+                                val thread = Thread {
+                                    Thread.sleep(1_000)
+                                    binding.scrollview.smoothScrollBy(0, scrolled);
+                                }.start();
+                                appendDiscovers(id = args.myArg.toInt(), page++)
+                            }
+                        }
+
+                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                            super.onScrolled(recyclerView, dx, dy)
+                            scrolled += dy;
                         }
                     })
                 }
             )
 
-            // Click sur le fragment
             discoveries.observe(
                 viewLifecycleOwner,
                 Observer {
-                    /*binding.categoryList.adapter = DiscoverAdapter(it) {
-                        val action = HomeSecondFragmentDirections
-                            .actionHomeSecondFragmentToHomeFragment()
-                        NavHostFragment.findNavController(this@HomeSecondFragment)
-                            .navigate(action)
+                    binding.discoverList.adapter = DiscoverAdapter(it) {
+                        val action = HomeSecondFragmentDirections.actionHomeSecondFragmentToMovieAboutFragment(it.id.toString());
+                        NavHostFragment.findNavController(this@HomeSecondFragment).navigate(action)
                     }
-                    println("cick on movie: " + it)*/
+
                 }
             )
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        with(homeViewModel) {
-            discoveries.observe(
-                viewLifecycleOwner,
-                Observer {
-                    binding.discoverList.adapter = DiscoverAdapter(it) {
-                        val action = HomeSecondFragmentDirections
-                            .actionHomeSecondFragmentToHomeFragment()
-                        NavHostFragment.findNavController(this@HomeSecondFragment)
-                            .navigate(action)
-                    }
-                }
-            )
-        }
-    }
 }
 

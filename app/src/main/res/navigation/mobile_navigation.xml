@@ -20,13 +20,13 @@
         android:name="com.gmail.eamosse.imdb.ui.home.HomeSecondFragment"
         android:label="@string/home_second"
         tools:layout="@layout/fragment_home_second">
-        <action
-            android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
-            app:destination="@id/navigation_home" />
 
         <argument
             android:name="myArg"
             app:argType="string" />
+        <action
+            android:id="@+id/action_HomeSecondFragment_to_MovieAboutFragment"
+            app:destination="@id/navigation_movie_about" />
     </fragment>
 
     <fragment
@@ -40,4 +40,15 @@
         android:name="com.gmail.eamosse.imdb.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_movie_about"
+        android:name="com.gmail.eamosse.imdb.ui.home.MovieAboutFragment"
+        android:label="Movie"
+        tools:layout="@layout/fragment_movie_about">
+        <argument
+            android:name="movieId"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

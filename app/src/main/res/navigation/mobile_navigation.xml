@@ -43,6 +43,12 @@
         <action
             android:id="@+id/navigation_playing2"
             app:destination="@id/navigation_playing" />
+        <action
+            android:id="@+id/dashboardToPopular"
+            app:destination="@id/navigation_popular" />
+        <action
+            android:id="@+id/dashToTopRated"
+            app:destination="@id/navigation_toprated" />
     </fragment>
 
     <fragment
@@ -78,6 +84,26 @@
         tools:layout="@layout/fragment_trending">
         <action
             android:id="@+id/playingToAbout"
+            app:destination="@id/navigation_movie_about" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_popular"
+        android:name="com.gmail.eamosse.imdb.ui.home.PopularFragment"
+        android:label="Movie"
+        tools:layout="@layout/fragment_trending">
+        <action
+            android:id="@+id/popularToMovieAbout"
+            app:destination="@id/navigation_movie_about" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_toprated"
+        android:name="com.gmail.eamosse.imdb.ui.home.TopRatedFragment"
+        android:label="Movie"
+        tools:layout="@layout/fragment_trending">
+        <action
+            android:id="@+id/topRatedToMovieAbout"
             app:destination="@id/navigation_movie_about" />
     </fragment>
 

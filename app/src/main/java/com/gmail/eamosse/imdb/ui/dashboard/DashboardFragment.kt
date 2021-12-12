@@ -24,6 +24,8 @@ class DashboardFragment : Fragment() {
     private lateinit var likeBtn: Button;
     private lateinit var trendsBtn: Button;
     private lateinit var playingBtn: Button;
+    private lateinit var popularBtn: Button;
+    private lateinit var topRatedBtn: Button;
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -34,6 +36,8 @@ class DashboardFragment : Fragment() {
         likeBtn = root.findViewById(R.id.dash_like);
         trendsBtn = root.findViewById(R.id.dash_trends);
         playingBtn = root.findViewById(R.id.dash_playing);
+        popularBtn = root.findViewById(R.id.dash_popular);
+        topRatedBtn = root.findViewById(R.id.dash_topRated);
         return root
     }
 
@@ -57,6 +61,18 @@ class DashboardFragment : Fragment() {
             playingBtn.setOnClickListener {
                 //Action perform when the user clicks on the button.
                 val action = DashboardFragmentDirections.navigationPlaying2();
+                NavHostFragment.findNavController(this@DashboardFragment).navigate(action)
+            }
+
+            popularBtn.setOnClickListener {
+                //Action perform when the user clicks on the button.
+                val action = DashboardFragmentDirections.dashboardToPopular();
+                NavHostFragment.findNavController(this@DashboardFragment).navigate(action)
+            }
+
+            topRatedBtn.setOnClickListener {
+                //Action perform when the user clicks on the button.
+                val action = DashboardFragmentDirections.dashToTopRated();
                 NavHostFragment.findNavController(this@DashboardFragment).navigate(action)
             }
 

@@ -48,9 +48,16 @@ class MovieAboutFragment : Fragment() {
                 viewLifecycleOwner,
                 Observer {
                     if (args.movieId.length > 0) getMovieById(id = args.movieId.toInt())
-                    else getMovieById(id = Random.nextInt(40000, 60000))
+                    else {
+                        getMovieById(id = Random.nextInt(40000, 60000))
+                    }
                 }
             )
+
+            error.observe(viewLifecycleOwner, Observer {
+                Log.e("ERRRORRR", "okokok")
+                getMovieById(id = Random.nextInt(40000, 60000))
+            })
 
             movie.observe(
                 viewLifecycleOwner,

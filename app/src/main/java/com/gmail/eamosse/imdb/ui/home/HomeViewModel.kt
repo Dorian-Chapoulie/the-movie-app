@@ -89,6 +89,32 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
         }
     }
 
+    fun getTopRated(pagination:Int = 1)  {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.getTopRated(pagination)) {
+                is Result.Succes -> {
+                    _discovers.postValue(result.data)
+                }
+                is Result.Error -> {
+                    _error.postValue(result.message)
+                }
+            }
+        }
+    }
+
+    fun getPopular(pagination:Int = 1)  {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.getPopular(pagination)) {
+                is Result.Succes -> {
+                    _discovers.postValue(result.data)
+                }
+                is Result.Error -> {
+                    _error.postValue(result.message)
+                }
+            }
+        }
+    }
+
     fun getPlaying(pagination:Int = 1)  {
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = repository.getPlaying(pagination)) {
@@ -135,6 +161,40 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
     fun appendtrends(page:Int = 1)  {
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = repository.getTrends(page)) {
+                is Result.Succes -> {
+                    val dis = _discovers.value;
+                    dis.let {
+                        val movies = listOf<Discover>(*it!!.toTypedArray(), *result.data.toTypedArray());
+                        _discovers.postValue(movies)
+                    }
+                }
+                is Result.Error -> {
+                    _error.postValue(result.message)
+                }
+            }
+        }
+    }
+
+    fun appendTopRated(page:Int = 1)  {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.getTopRated(page)) {
+                is Result.Succes -> {
+                    val dis = _discovers.value;
+                    dis.let {
+                        val movies = listOf<Discover>(*it!!.toTypedArray(), *result.data.toTypedArray());
+                        _discovers.postValue(movies)
+                    }
+                }
+                is Result.Error -> {
+                    _error.postValue(result.message)
+                }
+            }
+        }
+    }
+
+    fun appendPopular(page:Int = 1)  {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.getPopular(page)) {
                 is Result.Succes -> {
                     val dis = _discovers.value;
                     dis.let {

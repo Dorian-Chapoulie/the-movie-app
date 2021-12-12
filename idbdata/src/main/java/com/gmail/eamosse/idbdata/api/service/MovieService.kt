@@ -23,6 +23,12 @@ internal interface MovieService {
     @GET("/3/trending/movie/week")
     suspend fun gettrends(@Query("page") page:Int = 1): Response<DiscoverResponse>
 
+    @GET("/3/movie/popular")
+    suspend fun getPopular(@Query("page") page:Int = 1): Response<DiscoverResponse>
+
+    @GET("/3/movie/top_rated")
+    suspend fun getTopRated(@Query("page") page:Int = 1): Response<DiscoverResponse>
+
     @GET("/3/movie/now_playing")
     suspend fun getPlaying(@Query("page") page:Int = 1): Response<DiscoverResponse>
 

@@ -50,6 +50,29 @@ class MovieRepository : KoinComponent {
         }
     }
 
+    suspend fun getTrends(page:Int = 1): Result<List<Discover>> {
+        return when(val result = online.gettrends(page)) {
+            is Result.Succes -> {
+                val discover = result.data.map {
+                    it.toDiscover()
+                }
+                Result.Succes(discover)
+            }
+            is Result.Error -> result
+        }
+    }
+    suspend fun getPlaying(page:Int = 1): Result<List<Discover>> {
+        return when(val result = online.getPlaying(page)) {
+            is Result.Succes -> {
+                val discover = result.data.map {
+                    it.toDiscover()
+                }
+                Result.Succes(discover)
+            }
+            is Result.Error -> result
+        }
+    }
+
     suspend fun getMovieById(id:Int): Result<Movie> {
         return when(val result = online.getMovieById(id)) {
             is Result.Succes -> {

@@ -25,9 +25,8 @@ import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
-import kotlin.random.Random
 
-class MovieAboutFragment : Fragment() {
+class MovieLikeAboutFragment : Fragment() {
     val args: MovieAboutFragmentArgs by navArgs()
     private val homeViewModel: HomeViewModel by viewModel()
     private lateinit var binding: FragmentMovieAboutBinding
@@ -44,18 +43,11 @@ class MovieAboutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(homeViewModel) {
-            token.observe(
-                viewLifecycleOwner,
-                Observer {
-                    if (args.movieId.length > 0) getMovieById(id = args.movieId.toInt())
-                    else getMovieById(id = Random.nextInt(40000, 60000))
-                }
-            )
+
 
             movie.observe(
                 viewLifecycleOwner,
                 Observer {
-                    Log.e("ID: ", it.id.toString())
                     binding.item = it;
                     BidingAdapters.changeImage(binding.movieImg, it.poster_path);
                 }

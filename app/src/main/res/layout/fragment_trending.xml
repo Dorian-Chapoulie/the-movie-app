@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.HomeFragment">
+        tools:context=".ui.home.DashboardFragment">
 
         <ScrollView
             android:id="@+id/scrollview"
@@ -23,12 +23,12 @@
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/notificationList"
+                    android:id="@+id/discoverList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:spanCount="4"
-                    tools:listitem="@layout/list_notification" />
+                    tools:listitem="@layout/discover_item_list" />
             </LinearLayout>
         </ScrollView>
 

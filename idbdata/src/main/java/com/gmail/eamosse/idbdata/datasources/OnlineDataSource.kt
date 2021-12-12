@@ -41,6 +41,26 @@ internal class OnlineDataSource(private val service: MovieService) {
         }
     }
 
+    suspend fun gettrends(page: Int = 1): Result<List<DiscoverResponse.DiscoverItem>> {
+        return safeCall {
+            val response = service.gettrends(page)
+            when (val result = response.parse()) {
+                is Result.Succes -> Result.Succes(result.data.results)
+                is Result.Error -> result
+            }
+        }
+    }
+
+    suspend fun getPlaying(page: Int = 1): Result<List<DiscoverResponse.DiscoverItem>> {
+        return safeCall {
+            val response = service.getPlaying(page)
+            when (val result = response.parse()) {
+                is Result.Succes -> Result.Succes(result.data.results)
+                is Result.Error -> result
+            }
+        }
+    }
+
     suspend fun getMovieById(id:Int): Result<MovieResponse> {
         return safeCall {
             val response = service.getMovieById(id)

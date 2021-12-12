@@ -70,15 +70,5 @@
             app:layout_constraintTop_toBottomOf="@+id/movieReleaseDate"
             tools:text="Titre" />
 
-        <Button
-            android:id="@+id/movieLike"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="J'aime"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/movieOverview" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

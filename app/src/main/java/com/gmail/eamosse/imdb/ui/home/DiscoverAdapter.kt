@@ -7,7 +7,6 @@ import com.gmail.eamosse.idbdata.data.Discover
 import com.gmail.eamosse.imdb.databinding.DiscoverItemListBinding
 import com.gmail.eamosse.imdb.glide.BidingAdapters
 
-
 class DiscoverAdapter(private val items: List<Discover>, val handler: (discover:Discover) -> Unit) :
     RecyclerView.Adapter<DiscoverAdapter.ViewHolder>() {
 

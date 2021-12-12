@@ -36,6 +36,10 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
     val movie: LiveData<Movie>
         get() = _movie
 
+    private val _likedMovies: MutableLiveData<MutableList<Movie>> = MutableLiveData()
+    val likedMovies: LiveData<MutableList<Movie>>
+        get() = _likedMovies
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = repository.getToken()) {
@@ -49,9 +53,45 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
         }
     }
 
+    fun addLikedMovie(movie: Movie) {
+        var m = mutableListOf<Movie>();
+        if (_likedMovies.value != null) {
+            m = _likedMovies.value!!;
+        }
+        m.add(movie);
+        _likedMovies.postValue(m);
+        //Log.e("test:!", likedMovies.value?.get(0)?.title);
+    }
+
     fun getDiscover(id: Int, pagination:Int = 1)  {
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = repository.getDiscover(id, pagination)) {
+                is Result.Succes -> {
+                    _discovers.postValue(result.data)
+                }
+                is Result.Error -> {
+                    _error.postValue(result.message)
+                }
+            }
+        }
+    }
+
+    fun getTrends(pagination:Int = 1)  {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.getTrends(pagination)) {
+                is Result.Succes -> {
+                    _discovers.postValue(result.data)
+                }
+                is Result.Error -> {
+                    _error.postValue(result.message)
+                }
+            }
+        }
+    }
+
+    fun getPlaying(pagination:Int = 1)  {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.getPlaying(pagination)) {
                 is Result.Succes -> {
                     _discovers.postValue(result.data)
                 }
@@ -69,7 +109,6 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
                     _movie.postValue(result.data)
                 }
                 is Result.Error -> {
-                    Log.e("ICIIIIII", result.message);
                     _error.postValue(result.message)
                 }
             }
@@ -79,6 +118,40 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
     fun appendDiscovers(id: Int, page:Int = 1)  {
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = repository.getDiscover(id, page)) {
+                is Result.Succes -> {
+                    val dis = _discovers.value;
+                    dis.let {
+                        val movies = listOf<Discover>(*it!!.toTypedArray(), *result.data.toTypedArray());
+                        _discovers.postValue(movies)
+                    }
+                }
+                is Result.Error -> {
+                    _error.postValue(result.message)
+                }
+            }
+        }
+    }
+
+    fun appendtrends(page:Int = 1)  {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.getTrends(page)) {
+                is Result.Succes -> {
+                    val dis = _discovers.value;
+                    dis.let {
+                        val movies = listOf<Discover>(*it!!.toTypedArray(), *result.data.toTypedArray());
+                        _discovers.postValue(movies)
+                    }
+                }
+                is Result.Error -> {
+                    _error.postValue(result.message)
+                }
+            }
+        }
+    }
+
+    fun appendPlaying(page:Int = 1)  {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.getPlaying(page)) {
                 is Result.Succes -> {
                     val dis = _discovers.value;
                     dis.let {

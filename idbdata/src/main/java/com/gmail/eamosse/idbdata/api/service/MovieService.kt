@@ -20,6 +20,12 @@ internal interface MovieService {
     @GET("/3/discover/movie")
     suspend fun getDiscover(@Query("with_genres") withGenres:Int, @Query("page") page:Int = 1): Response<DiscoverResponse>
 
+    @GET("/3/trending/movie/week")
+    suspend fun gettrends(@Query("page") page:Int = 1): Response<DiscoverResponse>
+
+    @GET("/3/movie/now_playing")
+    suspend fun getPlaying(@Query("page") page:Int = 1): Response<DiscoverResponse>
+
     @GET("/3/movie/{movie}")
     suspend fun getMovieById(@Path("movie") movie:Int): Response<MovieResponse>
 }

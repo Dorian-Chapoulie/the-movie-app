@@ -1,30 +1,21 @@
 package com.gmail.eamosse.imdb.ui.home
 
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
-import android.util.Log.println
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.RecyclerView
-import com.gmail.eamosse.imdb.databinding.FragmentHomeSecondBinding
 import com.gmail.eamosse.imdb.databinding.FragmentMovieAboutBinding
 import com.gmail.eamosse.imdb.glide.BidingAdapters
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import kotlinx.android.synthetic.main.fragment_home_second.*
 import kotlinx.android.synthetic.main.fragment_movie_about.*
 import kotlinx.android.synthetic.main.list_item.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 class MovieAboutFragment : Fragment() {
@@ -47,27 +38,41 @@ class MovieAboutFragment : Fragment() {
             token.observe(
                 viewLifecycleOwner,
                 Observer {
-                    if (args.movieId.length > 0) getMovieById(id = args.movieId.toInt())
-                    else {
+                    if (args.movieId.length > 0) {
+                        getMovieById(id = args.movieId.toInt())
+                    } else {
                         getMovieById(id = Random.nextInt(40000, 60000))
                     }
                 }
             )
 
-            error.observe(viewLifecycleOwner, Observer {
-                Log.e("ERRRORRR", "okokok")
-                getMovieById(id = Random.nextInt(40000, 60000))
+            videos.observe(viewLifecycleOwner, Observer {
+                if (it.size > 0) {
+                        youtube_player_view.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+                        override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                           youTubePlayer.loadVideo(it[0].key!!, 0f)
+                        }
+                    })
+                } else {
+                    youtube_player_view.visibility = View.INVISIBLE;
+                }
             })
+
+            error.observe(
+                viewLifecycleOwner,
+                Observer {
+                    getMovieById(id = Random.nextInt(40000, 60000))
+                }
+            )
 
             movie.observe(
                 viewLifecycleOwner,
                 Observer {
-                    Log.e("ID: ", it.id.toString())
-                    binding.item = it;
-                    BidingAdapters.changeImage(binding.movieImg, it.poster_path);
+                    binding.item = it
+                    getMovieTrailerById(it.id!!)
+                    BidingAdapters.changeImage(binding.movieImg, it.poster_path)
                 }
             )
         }
     }
 }
-

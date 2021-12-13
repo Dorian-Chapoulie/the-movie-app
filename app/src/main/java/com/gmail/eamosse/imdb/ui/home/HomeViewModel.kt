@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gmail.eamosse.idbdata.data.Category
-import com.gmail.eamosse.idbdata.data.Discover
-import com.gmail.eamosse.idbdata.data.Movie
-import com.gmail.eamosse.idbdata.data.Token
+import com.gmail.eamosse.idbdata.data.*
 import com.gmail.eamosse.idbdata.repository.MovieRepository
 import com.gmail.eamosse.idbdata.utils.Result
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +36,10 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
     private val _likedMovies: MutableLiveData<MutableList<Movie>> = MutableLiveData()
     val likedMovies: LiveData<MutableList<Movie>>
         get() = _likedMovies
+
+    private val _videos: MutableLiveData<List<Video>> = MutableLiveData();
+    val videos: LiveData<List<Video>>
+    get() = _videos
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -133,6 +134,19 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
             when (val result = repository.getMovieById(id)) {
                 is Result.Succes -> {
                     _movie.postValue(result.data)
+                }
+                is Result.Error -> {
+                    _error.postValue(result.message)
+                }
+            }
+        }
+    }
+
+    fun getMovieTrailerById(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.getMovieTrailerById(id)) {
+                is Result.Succes -> {
+                    _videos.postValue(result.data)
                 }
                 is Result.Error -> {
                     _error.postValue(result.message)

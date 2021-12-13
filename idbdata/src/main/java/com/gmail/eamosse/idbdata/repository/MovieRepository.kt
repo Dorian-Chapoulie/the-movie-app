@@ -107,6 +107,15 @@ class MovieRepository : KoinComponent {
         }
     }
 
+    suspend fun getMovieTrailerById(id:Int): Result<List<Video>> {
+        return when(val result = online.getMovieTrailerById(id)) {
+            is Result.Succes -> {
+                Result.Succes(result.data.results)
+            }
+            is Result.Error -> result
+        }
+    }
+
     suspend fun getCategories(): Result<List<Category>> {
         return when (val result = online.getCategories()) {
             is Result.Succes -> {
